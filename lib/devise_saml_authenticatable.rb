@@ -151,6 +151,9 @@ module Devise
   @@saml_name_identifier_retriever = Proc.new do |current_user|
     current_user.public_send(Devise.saml_default_user_key)
   end
+
+  mattr_accessor :saml_bypass_authentication
+  @@saml_bypass_authentication = -> (strategy) { false }
 end
 
 # Add saml_authenticatable strategy to defaults.
