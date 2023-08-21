@@ -5,6 +5,11 @@ module Devise
     class SamlAuthenticatable < Authenticatable
       include DeviseSamlAuthenticatable::SamlConfig
       def valid?
+        if bypass_saml_auth?
+          halt!
+          return false
+        end
+
         if params[:SAMLResponse]
           OneLogin::RubySaml::Response.new(
             params[:SAMLResponse],
@@ -13,6 +18,10 @@ module Devise
         else
           false
         end
+      end
+
+      def bypass_saml_auth?
+        params[:controller] == 'status_pages/status_pages'
       end
 
       def authenticate!
